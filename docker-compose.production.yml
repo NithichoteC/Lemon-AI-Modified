@@ -9,6 +9,8 @@ services:
       - ACTUAL_HOST_WORKSPACE_PATH=/workspace
       - NODE_ENV=production
       - VITE_IS_CLIENT=false
+      - VITE_HOST=lemon-ai.umbryth.com
+      - VITE_ALLOWED_HOSTS=lemon-ai.umbryth.com
     ports:
       - "5005:5005"
     extra_hosts:

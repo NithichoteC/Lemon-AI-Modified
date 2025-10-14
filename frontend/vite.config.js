@@ -38,6 +38,12 @@ export default defineConfig(({ mode }) => {
     port: env.VITE_PORT || 5005,
     host: '0.0.0.0',
     strictPort: true,
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      'lemon-ai.umbryth.com',
+      '.umbryth.com'
+    ],
     proxy: {
       '/api': {
         target: env.VITE_SERVICE_URL || 'http://127.0.0.1:3000',
