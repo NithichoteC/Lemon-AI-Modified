@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   lemon-ai:
-    image: hexdolemonai/lemon:latest
+    build:
+      context: .
+      dockerfile: containers/app/Dockerfile
     container_name: lemon-ai-app
     environment:
       - DOCKER_HOST_ADDR=host.docker.internal
