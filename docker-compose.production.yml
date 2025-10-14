@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  lemon-ai:
+    image: hexdolemonai/lemon:latest
+    container_name: lemon-ai-app
+    environment:
+      - DOCKER_HOST_ADDR=host.docker.internal
+      - ACTUAL_HOST_WORKSPACE_PATH=/workspace
+      - NODE_ENV=production
+      - VITE_IS_CLIENT=false
+    ports:
+      - "5005:5005"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.cache:/.cache
+      - ./workspace:/app/workspace
+      - ./data:/app/data
+    stdin_open: true
+    tty: true
+    command: make run
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
