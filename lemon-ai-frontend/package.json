@@ -1,0 +1,28 @@
+{
+  "name": "lemon-ai",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --filter @lemonai/web dev",
+    "build": "pnpm --filter @lemonai/web build",
+    "start": "pnpm --filter @lemonai/web start",
+    "type-check": "pnpm --recursive type-check",
+    "lint": "pnpm --recursive lint",
+    "test": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/jest-dom": "^6.1.5",
+    "jsdom": "^23.2.0",
+    "@playwright/test": "^1.40.1"
+  }
+}
