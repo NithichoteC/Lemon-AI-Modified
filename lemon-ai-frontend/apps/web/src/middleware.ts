@@ -8,6 +8,24 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  // Check for demo session cookie first (bypass Supabase)
+  const hasDemoSession = request.cookies.get('lemon-ai-demo-session')?.value === 'true';
+
+  const protectedPaths = ['/chat', '/settings', '/agents'];
+  const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path));
+
+  const authPaths = ['/auth/sign-in', '/auth/sign-up'];
+  const isAuthPath = authPaths.some(path => request.nextUrl.pathname.startsWith(path));
+
+  // If demo session exists, allow access to protected paths
+  if (hasDemoSession) {
+    if (isAuthPath) {
+      return NextResponse.redirect(new URL('/chat', request.url));
+    }
+    return response;
+  }
+
+  // Otherwise, check real Supabase auth
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -32,15 +50,9 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  const protectedPaths = ['/chat', '/settings', '/agents'];
-  const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path));
-
   if (isProtectedPath && !user) {
     return NextResponse.redirect(new URL('/auth/sign-in', request.url));
   }
-
-  const authPaths = ['/auth/sign-in', '/auth/sign-up'];
-  const isAuthPath = authPaths.some(path => request.nextUrl.pathname.startsWith(path));
 
   if (isAuthPath && user) {
     return NextResponse.redirect(new URL('/chat', request.url));
