@@ -20,7 +20,7 @@ export async function signUp(formData: FormData) {
   const validated = SignUpSchema.safeParse(data);
 
   if (!validated.success) {
-    return { error: 'Invalid input' };
+    throw new Error('Invalid input');
   }
 
   const supabase = await createClient();
@@ -36,8 +36,8 @@ export async function signUp(formData: FormData) {
   });
 
   if (error) {
-    return { error: error.message };
+    throw new Error(error.message);
   }
 
-  redirect('/auth/verify-email');
+  redirect('/chat');
 }

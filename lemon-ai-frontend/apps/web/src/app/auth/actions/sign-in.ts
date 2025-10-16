@@ -18,7 +18,7 @@ export async function signIn(formData: FormData) {
   const validated = SignInSchema.safeParse(data);
 
   if (!validated.success) {
-    return { error: 'Invalid email or password format' };
+    throw new Error('Invalid email or password format');
   }
 
   const supabase = await createClient();
@@ -29,7 +29,7 @@ export async function signIn(formData: FormData) {
   });
 
   if (error) {
-    return { error: error.message };
+    throw new Error(error.message);
   }
 
   redirect('/chat');
