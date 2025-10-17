@@ -1,56 +1,154 @@
+'use client';
+
 import { signIn } from '../actions/sign-in';
+import { createStyles } from 'antd-style';
+import { Card, Input, Button, Alert } from 'antd';
+import { Mail, Lock, LogIn } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import Link from 'next/link';
+
+const useStyles = createStyles(({ token, css }) => ({
+  container: css`
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, ${token.colorPrimaryBg} 0%, ${token.colorBgLayout} 100%);
+    padding: ${token.paddingLG}px;
+  `,
+  card: css`
+    width: 100%;
+    max-width: 440px;
+    border-radius: ${token.borderRadiusLG}px;
+    box-shadow: ${token.boxShadowSecondary};
+  `,
+  logo: css`
+    text-align: center;
+    font-size: 48px;
+    margin-bottom: ${token.marginMD}px;
+  `,
+  title: css`
+    text-align: center;
+    font-size: ${token.fontSizeHeading2}px;
+    font-weight: 600;
+    margin-bottom: ${token.marginXS}px;
+    color: ${token.colorText};
+  `,
+  subtitle: css`
+    text-align: center;
+    font-size: ${token.fontSize}px;
+    color: ${token.colorTextSecondary};
+    margin-bottom: ${token.marginXL}px;
+  `,
+  form: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${token.marginLG}px;
+  `,
+  inputGroup: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${token.marginMD}px;
+  `,
+  footer: css`
+    text-align: center;
+    margin-top: ${token.marginLG}px;
+    font-size: ${token.fontSizeSM}px;
+    color: ${token.colorTextSecondary};
+
+    a {
+      color: ${token.colorPrimary};
+      font-weight: 500;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  `,
+  demoInfo: css`
+    margin-top: ${token.marginMD}px;
+  `,
+}));
 
 export default function SignInPage() {
+  const { styles } = useStyles();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (formData: FormData) => {
+    setIsSubmitting(true);
+    try {
+      await signIn(formData);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <div className="w-full max-w-md space-y-8 px-4">
-        <div>
-          <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Sign in to Lemon AI
-          </h2>
-        </div>
-        <form action={signIn} className="mt-8 space-y-6">
-          <div className="space-y-4 rounded-md shadow-sm">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
+    <div className={styles.container}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className={styles.card}>
+          <div className={styles.logo}>🍋</div>
+          <h1 className={styles.title}>Welcome Back</h1>
+          <p className={styles.subtitle}>Sign in to continue to Lemon AI</p>
+
+          <form action={handleSubmit} className={styles.form}>
+            <div className={styles.inputGroup}>
+              <Input
                 name="email"
                 type="email"
-                autoComplete="email"
-                required
-                className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-white dark:ring-gray-700"
+                size="large"
+                prefix={<Mail size={18} />}
                 placeholder="Email address"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
                 required
-                className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-white dark:ring-gray-700"
+                autoComplete="email"
+              />
+              <Input.Password
+                name="password"
+                size="large"
+                prefix={<Lock size={18} />}
                 placeholder="Password"
+                required
+                autoComplete="current-password"
               />
             </div>
-          </div>
 
-          <div>
-            <button
-              type="submit"
-              className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            <Alert
+              className={styles.demoInfo}
+              type="info"
+              message="Demo Credentials"
+              description={
+                <div>
+                  <div>Email: demo@lemonai.local</div>
+                  <div>Password: demo123</div>
+                </div>
+              }
+              showIcon
+            />
+
+            <Button
+              type="primary"
+              size="large"
+              htmlType="submit"
+              icon={<LogIn size={18} />}
+              loading={isSubmitting}
+              block
             >
-              Sign in
-            </button>
+              Sign In
+            </Button>
+          </form>
+
+          <div className={styles.footer}>
+            Don't have an account?{' '}
+            <Link href="/auth/sign-up">Sign up</Link>
           </div>
-        </form>
-      </div>
+        </Card>
+      </motion.div>
     </div>
   );
 }

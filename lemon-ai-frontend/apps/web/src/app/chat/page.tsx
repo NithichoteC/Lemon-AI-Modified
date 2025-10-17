@@ -1,42 +1,76 @@
+'use client';
+
+import { AppShell } from '@/components/AppShell';
+import { createStyles } from 'antd-style';
+import { Send } from 'lucide-react';
+import { Button, Input } from 'antd';
+
+const useStyles = createStyles(({ token, css }) => ({
+  container: css`
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  `,
+  messages: css`
+    flex: 1;
+    overflow-y: auto;
+    padding: ${token.paddingLG}px;
+  `,
+  welcome: css`
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: ${token.marginXXL * 2}px;
+  `,
+  title: css`
+    font-size: ${token.fontSizeHeading2}px;
+    font-weight: 600;
+    margin-bottom: ${token.marginMD}px;
+    color: ${token.colorText};
+  `,
+  subtitle: css`
+    font-size: ${token.fontSize}px;
+    color: ${token.colorTextSecondary};
+  `,
+  inputArea: css`
+    border-top: 1px solid ${token.colorBorderSecondary};
+    padding: ${token.paddingLG}px;
+    background: ${token.colorBgContainer};
+  `,
+  inputContainer: css`
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    gap: ${token.marginMD}px;
+  `,
+}));
+
 export default function ChatPage() {
+  const { styles } = useStyles();
+
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Sidebar */}
-      <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-4">
-        <div className="font-bold text-xl mb-6 text-gray-900 dark:text-white">Lemon AI</div>
-        <nav className="space-y-2">
-          <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white">
-            New Chat
-          </button>
-        </nav>
-      </div>
-
-      {/* Chat Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center text-gray-500 dark:text-gray-400 mt-20">
-              <h2 className="text-2xl font-semibold mb-2">Welcome to Lemon AI</h2>
-              <p>Start a conversation with your AI assistant</p>
-            </div>
+    <AppShell>
+      <div className={styles.container}>
+        <div className={styles.messages}>
+          <div className={styles.welcome}>
+            <h2 className={styles.title}>Welcome to Lemon AI</h2>
+            <p className={styles.subtitle}>Start a conversation with your AI assistant</p>
           </div>
         </div>
 
-        {/* Input */}
-        <div className="border-t border-gray-200 dark:border-gray-700 p-4">
-          <div className="max-w-3xl mx-auto flex gap-4">
-            <input
-              type="text"
+        <div className={styles.inputArea}>
+          <div className={styles.inputContainer}>
+            <Input.TextArea
               placeholder="Type your message..."
-              className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              autoSize={{ minRows: 1, maxRows: 6 }}
+              style={{ flex: 1 }}
             />
-            <button className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-colors">
+            <Button type="primary" icon={<Send size={18} />} size="large">
               Send
-            </button>
+            </Button>
           </div>
         </div>
       </div>
-    </div>
+    </AppShell>
   );
 }

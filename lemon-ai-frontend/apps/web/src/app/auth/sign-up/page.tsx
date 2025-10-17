@@ -1,61 +1,146 @@
+'use client';
+
 import { signUp } from '../actions/sign-up';
+import { createStyles } from 'antd-style';
+import { Card, Input, Button } from 'antd';
+import { Mail, Lock, User, UserPlus } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import Link from 'next/link';
+
+const useStyles = createStyles(({ token, css }) => ({
+  container: css`
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, ${token.colorPrimaryBg} 0%, ${token.colorBgLayout} 100%);
+    padding: ${token.paddingLG}px;
+  `,
+  card: css`
+    width: 100%;
+    max-width: 440px;
+    border-radius: ${token.borderRadiusLG}px;
+    box-shadow: ${token.boxShadowSecondary};
+  `,
+  logo: css`
+    text-align: center;
+    font-size: 48px;
+    margin-bottom: ${token.marginMD}px;
+  `,
+  title: css`
+    text-align: center;
+    font-size: ${token.fontSizeHeading2}px;
+    font-weight: 600;
+    margin-bottom: ${token.marginXS}px;
+    color: ${token.colorText};
+  `,
+  subtitle: css`
+    text-align: center;
+    font-size: ${token.fontSize}px;
+    color: ${token.colorTextSecondary};
+    margin-bottom: ${token.marginXL}px;
+  `,
+  form: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${token.marginLG}px;
+  `,
+  inputGroup: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${token.marginMD}px;
+  `,
+  footer: css`
+    text-align: center;
+    margin-top: ${token.marginLG}px;
+    font-size: ${token.fontSizeSM}px;
+    color: ${token.colorTextSecondary};
+
+    a {
+      color: ${token.colorPrimary};
+      font-weight: 500;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  `,
+}));
 
 export default function SignUpPage() {
+  const { styles } = useStyles();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (formData: FormData) => {
+    setIsSubmitting(true);
+    try {
+      await signUp(formData);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <div className="w-full max-w-md space-y-8 px-4">
-        <div>
-          <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Create your account
-          </h2>
-        </div>
-        <form action={signUp} className="mt-8 space-y-6">
-          <div className="space-y-4 rounded-md shadow-sm">
-            <div>
-              <label htmlFor="full_name" className="sr-only">Full name</label>
-              <input
-                id="full_name"
+    <div className={styles.container}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className={styles.card}>
+          <div className={styles.logo}>🍋</div>
+          <h1 className={styles.title}>Create Account</h1>
+          <p className={styles.subtitle}>Join Lemon AI and start your journey</p>
+
+          <form action={handleSubmit} className={styles.form}>
+            <div className={styles.inputGroup}>
+              <Input
                 name="full_name"
                 type="text"
-                className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-white dark:ring-gray-700"
+                size="large"
+                prefix={<User size={18} />}
                 placeholder="Full name (optional)"
+                autoComplete="name"
               />
-            </div>
-            <div>
-              <label htmlFor="email" className="sr-only">Email address</label>
-              <input
-                id="email"
+              <Input
                 name="email"
                 type="email"
-                autoComplete="email"
-                required
-                className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-white dark:ring-gray-700"
+                size="large"
+                prefix={<Mail size={18} />}
                 placeholder="Email address"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Password</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
                 required
-                className="relative block w-full rounded-md border-0 px-3 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:bg-gray-800 dark:text-white dark:ring-gray-700"
+                autoComplete="email"
+              />
+              <Input.Password
+                name="password"
+                size="large"
+                prefix={<Lock size={18} />}
                 placeholder="Password (min 6 characters)"
+                required
+                autoComplete="new-password"
               />
             </div>
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+
+            <Button
+              type="primary"
+              size="large"
+              htmlType="submit"
+              icon={<UserPlus size={18} />}
+              loading={isSubmitting}
+              block
             >
-              Sign up
-            </button>
+              Create Account
+            </Button>
+          </form>
+
+          <div className={styles.footer}>
+            Already have an account?{' '}
+            <Link href="/auth/sign-in">Sign in</Link>
           </div>
-        </form>
-      </div>
+        </Card>
+      </motion.div>
     </div>
   );
 }

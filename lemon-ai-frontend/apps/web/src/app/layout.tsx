@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { TRPCProvider } from '@/lib/trpc/react';
-
-const inter = Inter({ subsets: ['latin'] });
+import ThemeProvider from '@/providers/ThemeProvider';
+import GlobalStyle from '@/styles/GlobalStyle';
 
 export const metadata: Metadata = {
   title: 'Lemon AI - Intelligent Assistant',
@@ -16,11 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <TRPCProvider>
-          {children}
-        </TRPCProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        <ThemeProvider defaultAppearance="auto">
+          <GlobalStyle />
+          <TRPCProvider>{children}</TRPCProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

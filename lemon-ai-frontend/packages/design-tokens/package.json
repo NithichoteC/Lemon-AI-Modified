@@ -1,0 +1,21 @@
+{
+  "name": "@lemonai/design-tokens",
+  "version": "0.1.0",
+  "description": "Design tokens for Lemon AI - colors, typography, spacing, animations",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./colors": "./src/colors.ts",
+    "./typography": "./src/typography.ts",
+    "./spacing": "./src/spacing.ts",
+    "./animations": "./src/animations.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@lemonai/types": "workspace:*",
+    "typescript": "^5.7.3"
+  }
+}
